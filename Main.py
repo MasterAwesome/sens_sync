@@ -137,5 +137,6 @@ if __name__ == '__main__':
             "Current CS vals [sensitivity,zoom_sensitivity]: " + str(read_from_cs()))
         print("Current siege vals [sens, mouse_multiplier_unit, zoom, x_factor_aiming]: " + str(read_from_siege()))
         print("------------------------------------------------------------------------------------------------------")
+        input()
     else:
         print("unknown val")
