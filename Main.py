@@ -23,7 +23,9 @@ from Math import convert_siege_to_cs, convert_cs_to_siege
 def read_from_siege():
     siege_target = glob.glob('C:/Users/*/Documents/My Games/Rainbow Six - Siege/*/GameSettings.ini')
 
-    with open(siege_target[0]) as f:
+    profile_target = siege_profiler(siege_target)
+
+    with open(profile_target) as f:
         content = f.readlines()
 
     sens = 0
@@ -43,6 +45,18 @@ def read_from_siege():
             aim = int(x.split("=")[1])
 
     return [sens, mouse_multiplier_unit, aim, x_factor_aiming]
+
+
+def siege_profiler(siege_target):
+    profile_target = siege_target[0]
+    if siege_target.__sizeof__() > 1:
+        cnt = 1
+        print("\nDetected profiles ")
+        for file in siege_target:
+            print(str(cnt) + ". " + file.split("\\")[5])
+            cnt = cnt + 1
+        profile_target = siege_target[int(input("Select a profile: ")) - 1]
+    return profile_target
 
 
 def read_from_cs():
@@ -90,7 +104,9 @@ def write_to_siege():
     values = read_from_cs()
     siege_vals = convert_cs_to_siege(values[0], values[1])
     siege_target = glob.glob('C:/Users/*/Documents/My Games/Rainbow Six - Siege/*/GameSettings.ini')
-    with open(siege_target[0]) as f:
+    profile_target = siege_profiler(siege_target)
+
+    with open(profile_target) as f:
         content = f.readlines()
 
     modified_list = list()
@@ -113,7 +129,7 @@ def write_to_siege():
             continue
         modified_list.append(x)
 
-    f = open(siege_target[0], 'w')
+    f = open(profile_target, 'w')
     for x in modified_list:
         f.write(x)
 
@@ -134,8 +150,8 @@ if __name__ == '__main__':
     elif val == 3:
         print(
             "------------------------------------------------------------------------------------------------------\n"
-            "Current CS vals [sensitivity,zoom_sensitivity]: " + str(read_from_cs()))
-        print("Current siege vals [sens, mouse_multiplier_unit, zoom, x_factor_aiming]: " + str(read_from_siege()))
+            "Current siege vals [sens, mouse_multiplier_unit, zoom, x_factor_aiming]: " + str(read_from_siege()))
+        print("Current CS vals [sensitivity,zoom_sensitivity]: " + str(read_from_cs()))
         print("------------------------------------------------------------------------------------------------------")
         input()
     else:
