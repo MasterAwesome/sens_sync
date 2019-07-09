@@ -22,5 +22,5 @@ def convert_cs_to_siege(hipfire, awp):
 
 def convert_siege_to_cs(sens, mmultipler, aim, amultiplier):
     cs_hip = 13.02171428470 * sens * mmultipler
-    cs_awp = amultiplier * 78.7499  * aim * 0.01
+    cs_awp = amultiplier * 50  * aim * 0.012
     return [str(round(cs_hip, 2)), str(round(cs_awp, 2))]
