@@ -126,6 +126,6 @@ class R6Sensitivity(BaseSensitivity):
         """
         prefix = "ADSMouseSensitivity"
         scopes = ["Global", "1x", "1xHalf", "2x", "2xHalf", "3x", "4x", "12x"]
-        ratios = [0.67, 1, 1, 1, 1, 1, 1, 1]
+        ratios = [1, 0.67, 1, 1, 1, 1, 1, 1]
         for index, scope in enumerate(scopes):
             BaseSensitivity._replace_singular_config(f"{prefix}{scope}", str(ratios[index] * 100), content)
