@@ -54,6 +54,7 @@ if __name__ == '__main__':
         print("Siege vals [sens, mouse_multiplier_unit, zoom, x_factor_aiming]: " + R6SensConverted.__repr__())
         print("CS vals [sensitivity, zoom_sensitivity]: " + CSSensConverted.__repr__())
         print("-" * 150)
+        input("ENTER KEY TO EXIT (AH THE IRONY ENTER TO EXIT): ")
     elif val == 42:
         print("MEANING OF LIFE ATTAINED!")
     else:
