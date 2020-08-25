@@ -14,125 +14,8 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
-
-import glob
-
-from Math import convert_siege_to_cs, convert_cs_to_siege
-
-
-def read_from_siege():
-    siege_target = glob.glob('C:/Users/*/Documents/My Games/Rainbow Six - Siege/*/GameSettings.ini')
-
-    profile_target = siege_profiler(siege_target)
-
-    with open(profile_target) as f:
-        content = f.readlines()
-
-    sens = 0
-    mouse_multiplier_unit = 0
-    aim = 0
-    x_factor_aiming = 0
-
-    for x in content:
-
-        if "MouseYawSensitivity" in x:
-            sens = int(x.split("=")[1])
-        elif "MouseSensitivityMultiplierUnit" in x:
-            mouse_multiplier_unit = float(x.split("=")[1])
-        elif "XFactorAiming" in x:
-            x_factor_aiming = float(x.split("=")[1])
-        elif "AimDownSightsMouse" in x:
-            aim = int(x.split("=")[1])
-
-    return [sens, mouse_multiplier_unit, aim, x_factor_aiming]
-
-
-def siege_profiler(siege_target):
-    profile_target = siege_target[0]
-    if siege_target.__sizeof__() > 1:
-        cnt = 1
-        print("\nDetected profiles ")
-        for file in siege_target:
-            print(str(cnt) + ". " + file.split("\\")[5])
-            cnt = cnt + 1
-        profile_target = siege_target[int(input("Select a profile: ")) - 1]
-    return profile_target
-
-
-def read_from_cs():
-    cs_target = glob.glob('C:/Program Files (x86)/Steam/userdata/*/730/local/cfg/config.cfg')
-
-    with open(cs_target[0]) as f:
-        content = f.readlines()
-
-    hipfire = 0
-    awp = 0
-
-    for x in content:
-        if x.startswith("sensitivity \""):
-            hipfire = float(x.split("\"")[1])
-        if "zoom_sensitivity_ratio_mouse" in x:
-            awp = float(x.split("\"")[1])
-
-    return [hipfire, awp]
-
-
-def write_to_cs():
-    values = read_from_siege()
-    csgo_vals = convert_siege_to_cs(values[0], values[1], values[2], values[3])
-    cs_target = glob.glob('C:/Program Files (x86)/Steam/userdata/*/730/local/cfg/config.cfg')
-    with open(cs_target[0]) as f:
-        content = f.readlines()
-
-    modified_list = list()
-
-    for x in content:
-        if x.startswith("sensitivity \""):
-            modified_list.append("sensitivity \"" + str(csgo_vals[0]) + "\"\n")
-            continue
-        elif "zoom_sensitivity_ratio_mouse" in x:
-            modified_list.append("zoom_sensitivity_ratio_mouse \"" + str(csgo_vals[1]) + "\"\n")
-            continue
-        modified_list.append(x)
-
-    f = open(cs_target[0], 'w')
-    for x in modified_list:
-        f.write(x)
-
-
-def write_to_siege():
-    values = read_from_cs()
-    siege_vals = convert_cs_to_siege(values[0], values[1])
-    siege_target = glob.glob('C:/Users/*/Documents/My Games/Rainbow Six - Siege/*/GameSettings.ini')
-    profile_target = siege_profiler(siege_target)
-
-    with open(profile_target) as f:
-        content = f.readlines()
-
-    modified_list = list()
-
-    for x in content:
-        if x.startswith("MouseYawSensitivity"):
-            modified_list.append("MouseYawSensitivity=50\n")
-            continue
-        elif x.startswith("MousePitchSensitivity"):
-            modified_list.append("MousePitchSensitivity=50\n")
-            continue
-        elif "MouseSensitivityMultiplierUnit" in x:
-            modified_list.append("MouseSensitivityMultiplierUnit=" + str(siege_vals[0]) + "\n")
-            continue
-        elif "XFactorAiming" in x:
-            modified_list.append("XFactorAiming=" + str(siege_vals[1]) + "\n")
-            continue
-        elif "AimDownSightsMouse" in x:
-            modified_list.append("AimDownSightsMouse=100\n")
-            continue
-        modified_list.append(x)
-
-    f = open(profile_target, 'w')
-    for x in modified_list:
-        f.write(x)
-
+from implementations.CSGOSensitivity import CSGOSensitivity
+from implementations.R6Sensitivity import R6Sensitivity
 
 if __name__ == '__main__':
     print("Main.py: Copyright (C) 2018  Arvind Mukund<armu30@gmail.com>\n"
@@ -144,23 +27,34 @@ if __name__ == '__main__':
     val = input("Enter your input: ")
     val = int(val)
     if val == 1:
-        write_to_siege()
+        CSSens = CSGOSensitivity(cfg_path='examples/csgo/config.cfg')
+        R6Sens = R6Sensitivity(cfg_path='examples/*/GameSettings.ini', prev_impl=CSSens)
+        R6Sens.write_to_file()
+
     elif val == 2:
-        write_to_cs()
+        R6Sens = R6Sensitivity(cfg_path='examples/*/GameSettings.ini')
+        CSSens = CSGOSensitivity(cfg_path='examples/csgo/config.cfg', prev_impl=R6Sens)
+        CSSens.write_to_file()
+
     elif val == 3:
-        print(
-            "------------------------------------------------------------------------------------------------------\n"
-            "Current siege vals [sens, mouse_multiplier_unit, zoom, x_factor_aiming]: " + str(read_from_siege()))
-        print("Current CS vals [sensitivity,zoom_sensitivity]: " + str(read_from_cs()))
-        print("------------------------------------------------------------------------------------------------------")
-        vals = read_from_siege()
-        csgo_vals = convert_siege_to_cs(vals[0],vals[1],vals[2],vals[3])
-        print("------------------------------------------------------------------------------------------------------\n")		
-        print("CONVERTED SIEGE TO CS[sensitivity, zoom_sensitivity]: " + str(csgo_vals))
-        vals = read_from_cs()
-        siege_vals = convert_cs_to_siege(vals[0],vals[1])
-        print("CONVERTED CS TO SIEGE[sens, mouse_multiplier_unit, zoom, x_factor_aiming]: " + str(siege_vals))
-        print("-------------------------------------------------------------------------")
-        input()
+        R6Sens = R6Sensitivity(cfg_path='examples/*/GameSettings.ini')
+        CSSens = CSGOSensitivity(cfg_path='examples/csgo/config.cfg')
+
+        R6SensConverted = R6Sensitivity(cfg_path='examples/*/GameSettings.ini', prev_impl=CSSens)
+        CSSensConverted = CSGOSensitivity(cfg_path='examples/csgo/config.cfg', prev_impl=R6Sens)
+
+        print("\nCURRENT")
+        print("-" * 150)
+        print("Siege vals [sens, mouse_multiplier_unit, zoom, x_factor_aiming]: " + R6Sens.__repr__())
+        print("CS vals [sensitivity,zoom_sensitivity]: " + CSSens.__repr__())
+        print("-" * 150)
+
+        print("\nCONVERTED")
+        print("-" * 150)
+        print("Siege vals [sens, mouse_multiplier_unit, zoom, x_factor_aiming]: " + R6SensConverted.__repr__())
+        print("CS vals [sensitivity, zoom_sensitivity]: " + CSSensConverted.__repr__())
+        print("-" * 150)
+    elif val == 42:
+        print("MEANING OF LIFE ATTAINED!")
     else:
-        print("unknown val")
+        raise NotImplementedError("The option you're looking for doesn't exist :O. Try 42")
