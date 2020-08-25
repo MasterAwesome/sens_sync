@@ -27,21 +27,21 @@ if __name__ == '__main__':
     val = input("Enter your input: ")
     val = int(val)
     if val == 1:
-        CSSens = CSGOSensitivity(cfg_path='examples/csgo/config.cfg')
-        R6Sens = R6Sensitivity(cfg_path='examples/*/GameSettings.ini', prev_impl=CSSens)
+        CSSens = CSGOSensitivity()
+        R6Sens = R6Sensitivity(prev_impl=CSSens)
         R6Sens.write_to_file()
 
     elif val == 2:
-        R6Sens = R6Sensitivity(cfg_path='examples/*/GameSettings.ini')
-        CSSens = CSGOSensitivity(cfg_path='examples/csgo/config.cfg', prev_impl=R6Sens)
+        R6Sens = R6Sensitivity()
+        CSSens = CSGOSensitivity(prev_impl=R6Sens)
         CSSens.write_to_file()
 
     elif val == 3:
-        R6Sens = R6Sensitivity(cfg_path='examples/*/GameSettings.ini')
-        CSSens = CSGOSensitivity(cfg_path='examples/csgo/config.cfg')
+        R6Sens = R6Sensitivity()
+        CSSens = CSGOSensitivity()
 
-        R6SensConverted = R6Sensitivity(cfg_path='examples/*/GameSettings.ini', prev_impl=CSSens)
-        CSSensConverted = CSGOSensitivity(cfg_path='examples/csgo/config.cfg', prev_impl=R6Sens)
+        R6SensConverted = R6Sensitivity(prev_impl=CSSens)
+        CSSensConverted = CSGOSensitivity(prev_impl=R6Sens)
 
         print("\nCURRENT")
         print("-" * 150)
