@@ -47,8 +47,8 @@ class CSGOSensitivity(BaseSensitivity):
                 f.write(x)
 
         # H4X TO MAKE IT COMPLIANT
-        BaseSensitivity._replace_singular_config("sensitivity \"", str(self.hipfire) + "\"", content, delimiter="")
-        BaseSensitivity._replace_singular_config("zoom_sensitivity_ratio_mouse \"", str(self.ads) + "\"", content,
+        BaseSensitivity._replace_singular_config("sensitivity \"", str(round(self.hipfire, 4)) + "\"", content, delimiter="")
+        BaseSensitivity._replace_singular_config("zoom_sensitivity_ratio_mouse \"", str(round(self.ads, 4)) + "\"", content,
                                                  delimiter="")
         with open(cs_target, 'w') as f:
             for x in content:
