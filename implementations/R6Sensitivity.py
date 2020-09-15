@@ -18,6 +18,7 @@ class R6Sensitivity(BaseSensitivity):
 
     def __init__(self, cfg_path='C:/Users/*/Documents/My Games/Rainbow Six - Siege/*/GameSettings.ini', prev_impl=None):
         self.__mouse_multiplier_unit, self.__x_factor_aiming = [0, 0]
+        self.__actual_sens, self.__actual_ads_sens = [50, 100]
         super(R6Sensitivity, self).__init__(cfg_path, prev_impl)
 
     def read_from_base_sensitivity(self, __cls: BaseSensitivity):
@@ -65,6 +66,8 @@ class R6Sensitivity(BaseSensitivity):
             elif "AimDownSightsMouse" in x:
                 aim = int(x.split("=")[1])
 
+        self.__actual_sens = sens
+        self.__actual_ads_sens = aim
         self.hipfire, self.ads = self.__r6_sens_to_base_sensitivity(sens, mouse_multiplier_unit, aim, x_factor_aiming)
         self.__mouse_multiplier_unit = mouse_multiplier_unit
         self.__x_factor_aiming = x_factor_aiming
@@ -116,7 +119,7 @@ class R6Sensitivity(BaseSensitivity):
                 f.write(x)
 
     def __repr__(self):
-        vals = [50, self.__mouse_multiplier_unit, 100, self.__x_factor_aiming]
+        vals = [self.__actual_sens, self.__mouse_multiplier_unit, self.__actual_ads_sens, self.__x_factor_aiming]
         return str(vals)
 
     def __y5s3_ads_mouse_specifics(self, content):
