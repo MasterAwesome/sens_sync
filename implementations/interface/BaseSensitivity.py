@@ -60,6 +60,6 @@ class BaseSensitivity:
         :param delimiter: delimter between key and value
         """
         for index, item in enumerate(config_list):
-            if item.startswith(key):
+            if item.startswith(f"{key}{delimiter}"):
                 config_list.remove(item)
                 config_list.insert(index, f"{key}{delimiter}{value}\n")
