@@ -128,7 +128,7 @@ class R6Sensitivity(BaseSensitivity):
         :param content: list that contains the config values.
         """
         prefix = "ADSMouseSensitivity"
-        scopes = ["Global", "1x", "1xHalf", "2x", "2xHalf", "3x", "4x", "12x"]
-        ratios = [1, 0.67, 1, 1, 1, 1, 1, 1]
+        scopes = ["Global", "1x", "1xHalf", "2x", "2xHalf", "3x", "4x", "5x", "12x"]
+        ratios = [1, .689, 1.1135, 1.1319, 1.1427, 1.1518, 1.1573, 1.1643, 1.7819]
         for index, scope in enumerate(scopes):
             BaseSensitivity._replace_singular_config(f"{prefix}{scope}", str(int(ratios[index] * 100)), content)
